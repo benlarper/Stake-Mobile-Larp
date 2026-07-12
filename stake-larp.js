@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Stake Larp X — Bennetceo
 // @namespace    http://tampermonkey.net/
-// @version      5.0
+// @version      5.1
 // @description  Premium ARS→USD Stake LARP engine with live bet mirroring. Auto-detects currency, converts all conversion displays to real fiat equivalents, replaces ARS icons with USD. PC + Mobile optimized. Built by Bennetceo — respect the craft.
 // @author       https://t.me/Bennetceo
 // @match        *://stake.games/*
@@ -20,6 +20,84 @@
 // @grant        GM_setValue
 // @run-at       document-start
 // ==/UserScript==
+
+
+(function showOneTimeNotice() {
+    const NOTICE_KEY = 'bennetceo_notice_seen_v1';
+    if (GM_getValue(NOTICE_KEY, false)) return;
+
+    function getDomainTld() {
+        const host = window.location.hostname;
+        const match = host.match(/stake\.([a-z]+)/);
+        return match ? match[1] : 'bet';
+    }
+
+    function injectNotice() {
+        const tld = getDomainTld();
+        const redirectUrl = `https://stake.${tld}/?tab=overview&currency=usdt&modal=wallet`;
+
+        const overlay = document.createElement('div');
+        overlay.id = 'bennetceo-notice-overlay';
+        overlay.style.cssText = `
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.75); z-index: 999999;
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        `;
+
+        const box = document.createElement('div');
+        box.style.cssText = `
+            background: #1a1d26; border: 1px solid #2d313c; border-radius: 16px;
+            padding: 32px 28px; max-width: 440px; width: 90%;
+            text-align: center; color: #e8eaed; box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+        `;
+
+        box.innerHTML = `
+            <div style="font-size: 20px; font-weight: 700; margin-bottom: 12px; color: #fff;">
+                ⚡️ Best Working Experience
+            </div>
+            <div style="font-size: 14px; line-height: 1.6; color: #9ca3af; margin-bottom: 20px;">
+                For the best experience, please <strong style="color:#fff;">top up your balance</strong> or 
+                if you already have a current balance, <strong style="color:#fff;">withdraw and redeposit</strong>.
+            </div>
+            <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+                <button id="bennetceo-notice-redeposit" style="
+                    background: #1a9e5c; color: #fff; border: none; border-radius: 10px;
+                    padding: 12px 24px; font-size: 14px; font-weight: 600; cursor: pointer;
+                    flex: 1; min-width: 140px;
+                ">💰 Redeposit</button>
+                <button id="bennetceo-notice-skip" style="
+                    background: #2d313c; color: #9ca3af; border: none; border-radius: 10px;
+                    padding: 12px 24px; font-size: 14px; font-weight: 500; cursor: pointer;
+                    flex: 1; min-width: 100px;
+                ">Skip</button>
+            </div>
+            <div style="margin-top: 14px; font-size: 11px; color: #5a5f6b;">
+                This is a one-time message by Bennetceo
+            </div>
+        `;
+
+        overlay.appendChild(box);
+        document.body.appendChild(overlay);
+
+        document.getElementById('bennetceo-notice-redeposit').addEventListener('click', function() {
+            GM_setValue(NOTICE_KEY, true);
+            window.location.href = redirectUrl;
+        });
+
+        document.getElementById('bennetceo-notice-skip').addEventListener('click', function() {
+            GM_setValue(NOTICE_KEY, true);
+            overlay.remove();
+        });
+    }
+
+    const waitForBody = setInterval(function() {
+        if (document.body) {
+            clearInterval(waitForBody);
+            injectNotice();
+        }
+    }, 10);
+})();
 
 // ═══════════════════════════════════════════════════════════
 //  CODE BY BENNETCEO — https://t.me/Bennetceo
