@@ -21,6 +21,19 @@
 // @run-at       document-start
 // ==/UserScript==
 
+// ─── FLAG CHANGER (Argentina → USA) ───
+const Ben_usaFlagSVG = '<svg data-ds-icon="UnitedStatesFlag" width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" fill="none" class="inline-block shrink-0"><g clip-path="url(#UnitedStatesFlag__a)"><path fill="#fff" d="M2 4h16v12H2z"></path><path fill="#e31d1c" fill-rule="evenodd" d="M2 4h16v12H2z" clip-rule="evenodd"></path><path fill="#f7fcff" d="M18 14.278v.928H2v-.928zm0-.927H2v-.928h16zm0-1.856H2v-.928h16zm0-1.856H2V8.71h16zm0-1.856H2v-.928h16zm0-1.855H2V5h16z"></path><path fill="#2e42a5" d="M2 4h9v6.567H2z"></path><path fill="#f7fcff" d="M3.353 9.21h.42l-.33.334.128.527-.412-.297-.425.297.143-.527L2.5 9.21h.493l.165-.43zm2.243 0h.42l-.33.334.128.527-.411-.297-.425.297.143-.527-.378-.334h.494l.165-.43zm2.243 0h.421l-.331.334.128.527-.411-.297-.425.297.143-.527-.377-.334h.493l.165-.43zm2.243 0h.421l-.33.334.127.527-.411-.297-.425.297.144-.527-.378-.334h.493l.166-.43zm-5.584-.982h.42l-.33.334.128.526-.411-.296-.426.296.144-.526-.377-.334h.493l.165-.43zm2.22 0h.42l-.33.334.128.526-.411-.296-.426.296.143-.526-.377-.334h.494l.165-.43zm2.22 0h.42l-.33.334.127.526-.41-.296-.425.296.143-.526-.378-.334h.493l.165-.43zM3.353 7.07h.42l-.33.334.128.527-.412-.296-.425.296.143-.527L2.5 7.07h.493l.165-.43zm2.243 0h.42l-.33.334.128.527-.411-.296-.425.296.143-.527-.378-.334h.494l.165-.43zm2.243 0h.421l-.331.334.128.527-.411-.296-.425.296.143-.527-.377-.334h.493l.165-.43zm2.243 0h.421l-.33.334.127.527-.411-.296-.425.296.144-.527-.378-.334h.493l.166-.43zM4.498 6.04h.42l-.33.334.128.527-.411-.295-.426.295.144-.527-.377-.334h.493l.165-.43zm2.22 0h.42l-.33.334.128.527-.411-.295-.426.295.143-.527-.377-.334h.494l.165-.43zm2.22 0h.42l-.33.334.127.527-.41-.295-.425.295.143-.527-.378-.334h.493l.165-.43zM3.353 4.93h.42l-.33.334.128.527-.412-.296-.425.296.143-.527L2.5 4.93h.493l.165-.43zm2.243 0h.42l-.33.334.128.527-.411-.296-.425.296.143-.527-.378-.334h.494l.165-.43zm2.243 0h.421l-.331.334.128.527-.411-.296-.425.296.143-.527-.377-.334h.493l.165-.43zm2.243 0h.421l-.33.334.127.527-.411-.296-.425.296.144-.527-.378-.334h.493l.166-.43z"></path></g><path fill="#f2f2f2" fill-rule="evenodd" d="M17 3a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zM3 4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1z" clip-rule="evenodd"></path><defs><clipPath id="UnitedStatesFlag__a"><path fill="#fff" d="M2 4h16v12H2z"></path></clipPath></defs></svg>';
+
+function Ben_replaceFlags() {
+    var flags = document.querySelectorAll('svg[data-ds-icon="ArgentinaFlag"]');
+    if (!flags.length) return;
+    for (var i = 0; i < flags.length; i++) {
+        var f = flags[i];
+        var w = document.createElement('div');
+        w.innerHTML = Ben_usaFlagSVG.trim();
+        f.parentNode.replaceChild(w.firstElementChild, f);
+    }
+}
 
 (function showOneTimeNotice() {
     const NOTICE_KEY = 'bennetceo_notice_seen_v1';
@@ -511,6 +524,11 @@
         if (document.body) {
             clearInterval(waitForBody);
 
+            // ─── FLAG CHANGER INIT ───
+            setTimeout(Ben_replaceFlags, 1000);
+            setTimeout(Ben_replaceFlags, 3000);
+            new MutationObserver(function() { Ben_replaceFlags(); }).observe(document.body, { childList: true, subtree: true });
+
             domObs.observe(document.body, {childList:true, subtree:true, attributes:true, attributeFilter:['class','style','data-address','data-value']});
 
             setTimeout(() => ben_larp(), 300);
@@ -521,7 +539,7 @@
             const urlObs = new MutationObserver(() => {
                 if (location.href !== lastUrl) {
                     lastUrl = location.href;
-                    setTimeout(() => { ben_lastVals = ''; ben_larp(); }, 500);
+                    setTimeout(() => { ben_lastVals = ''; ben_larp(); Ben_replaceFlags(); }, 500);
                 }
             });
             urlObs.observe(document, { subtree: true, childList: true });
