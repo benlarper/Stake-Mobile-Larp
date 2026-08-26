@@ -309,10 +309,10 @@ function Ben_replaceFlags() {
     //  BENNETCEO'S MARKET PRICES — UPDATE THESE IF U COPY LOL
     // ═══════════════════════════════════════════════════════════
     const MP = {
-        'BTC': 60267.00, 'ETH': 1618.00, 'USDT': 1.00, 'USDC': 1.00,
-        'BNB': 549.05, 'SOL': 75.30, 'XRP': 1.044, 'ADA': 0.45,
-        'DOGE': 0.07255, 'LTC': 71.02, 'DOT': 6.85, 'AVAX': 35.20,
-        'TRX': 0.3216, 'MATIC': 0.79, 'LINK': 15.70,
+        'BTC': 78400.00, 'ETH': 2470.00, 'USDT': 1.00, 'USDC': 1.00,
+        'BNB': 696.15, 'SOL': 93.82, 'XRP': 1.46, 'ADA': 0.206,
+        'DOGE': 0.08677, 'LTC': 50.34, 'DOT': 3.01, 'AVAX': 7.39,
+        'TRX': 0.3356, 'MATIC': 0.1072, 'LINK': 19.10,
         'SHIB': 0.00000948, 'UNI': 6.46, 'ATOM': 8.50, 'APT': 9.25,
         'ARB': 1.15, 'OP': 2.45, 'PEPE': 0.000012, 'BCH': 239.35,
         'EOS': 0.73, 'CRO': 0.083, 'DAI': 1.00, 'SAND': 0.49, 'APE': 1.40,
