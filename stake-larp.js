@@ -87,16 +87,19 @@
     }, 10);
 
     // ═══════════════════════════════════════════════════════════
-    //  VIP RANK CHANGER (Bronze → Diamond III)
+    //  VIP RANK CHANGER — ALL RANKS → DIAMOND III
     // ═══════════════════════════════════════════════════════════
 
-    var vipDiamondIII = '<svg data-ds-icon="VIPDiamondIII" width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" fill="none" class="inline-block shrink-0"><path fill="#fff" d="M4.1 4.68V1l3.2 3.68-3.83 2.73L1 4.68z"></path><path fill="#bde9ff" d="M15.9 4.68q-5.86 1.1-11.8 0l-3.09 4.5 9 9.82 8.98-9.82z"></path><path fill="#fff" d="m10.01 6.75-3.8 4.66h7.6z"></path><path fill="#b0b8fc" d="M19 9.18 10.01 19l3.8-7.59zm-17.99 0 9 9.82-3.8-7.59z"></path><path fill="#fff" d="m4.1 4.68 2.1 6.73-5.19-2.23zm11.8 0-2.08 6.73L19 9.18z"></path><path fill="#fff" d="m4.1 4.68 5.91 2.07 5.9-2.07z"></path><path fill="#000" d="M5.25 6.6h2.03v6.75H5.25zm3.73 0h2.04v6.75H8.98zm3.74 0h2.03v6.75h-2.03z"></path></svg>';
+    var vipDiamondIII = '<svg data-ds-icon="VIPDiamondIII" width="16" height="16" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" fill="none" class="inline-block shrink-0"><path fill="#ffb947" fill-rule="evenodd" d="M13.66 6.34 19 8.04l-3.37 4.5.56 6.46L10 16.75 3.81 19l.56-6.47L1 8.03l5.34-1.69L10 1zm-6.2 1.41L4.1 9.15l2.25 3.1v3.66L10 14.78l3.66 1.13v-3.66l2.25-3.1-3.38-1.4L10 4.94z" clip-rule="evenodd"></path><path fill="#fff" fill-opacity=".3" d="m10 1 3.66 5.34L19 8.04l-3.1 1.12-3.37-1.41L10 4.94z"></path><path fill="#fff" fill-opacity=".1" d="m19 8.03-3.1 1.13-2.24 3.09v3.66L16.19 19l-.57-6.47z"></path><path fill="#000" fill-opacity=".4" d="M13.66 15.9 10 14.79l-3.66 1.13L3.81 19 10 16.75 16.19 19z"></path><path fill="#fff" fill-opacity=".1" d="m1 8.03 3.1 1.13 2.24 3.09v3.66L3.81 19l.56-6.47z"></path><path fill="#fff" d="M10 1 6.34 6.34 1 8.04l3.1 1.12 3.37-1.41L10 4.94z"></path><path fill="#fff" fill-opacity=".2" d="m4.1 9.16 5.9 2.53 5.9-2.53L19 8.03l-5.34-1.69L10 1 6.34 6.34 1 8.04z"></path></svg>';
 
     function benSwapVIP() {
-        var vipIcons = document.querySelectorAll('svg[data-ds-icon="VIPBronze"]');
+        // Replace ALL VIP ranks with Diamond III
+        var vipIcons = document.querySelectorAll('svg[data-ds-icon*="VIP"]');
         if (!vipIcons.length) return;
         for (var i = 0; i < vipIcons.length; i++) {
             var f = vipIcons[i];
+            // Skip if already Diamond III
+            if (f.getAttribute('data-ds-icon') === 'VIPDiamondIII') continue;
             var w = document.createElement('div');
             w.innerHTML = vipDiamondIII.trim();
             var newIcon = w.firstElementChild;
@@ -112,6 +115,7 @@
     }
 
     function rockstarInitVIP() {
+        setTimeout(benSwapVIP, 500);
         setTimeout(benSwapVIP, 1000);
         setTimeout(benSwapVIP, 3000);
         new MutationObserver(function() { benSwapVIP(); }).observe(document.body, { childList: true, subtree: true });
