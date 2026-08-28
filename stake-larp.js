@@ -93,7 +93,7 @@
     var vipDiamondIII = '<svg data-ds-icon="VIPDiamondIII" width="16" height="16" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" fill="none" class="inline-block shrink-0"><path fill="#ffb947" fill-rule="evenodd" d="M13.66 6.34 19 8.04l-3.37 4.5.56 6.46L10 16.75 3.81 19l.56-6.47L1 8.03l5.34-1.69L10 1zm-6.2 1.41L4.1 9.15l2.25 3.1v3.66L10 14.78l3.66 1.13v-3.66l2.25-3.1-3.38-1.4L10 4.94z" clip-rule="evenodd"></path><path fill="#fff" fill-opacity=".3" d="m10 1 3.66 5.34L19 8.04l-3.1 1.12-3.37-1.41L10 4.94z"></path><path fill="#fff" fill-opacity=".1" d="m19 8.03-3.1 1.13-2.24 3.09v3.66L16.19 19l-.57-6.47z"></path><path fill="#000" fill-opacity=".4" d="M13.66 15.9 10 14.79l-3.66 1.13L3.81 19 10 16.75 16.19 19z"></path><path fill="#fff" fill-opacity=".1" d="m1 8.03 3.1 1.13 2.24 3.09v3.66L3.81 19l.56-6.47z"></path><path fill="#fff" d="M10 1 6.34 6.34 1 8.04l3.1 1.12 3.37-1.41L10 4.94z"></path><path fill="#fff" fill-opacity=".2" d="m4.1 9.16 5.9 2.53 5.9-2.53L19 8.03l-5.34-1.69L10 1 6.34 6.34 1 8.04z"></path></svg>';
 
     function benSwapVIP() {
-        // Replace ALL VIP ranks with Diamond III
+        // Replace ALL VIP ranks with Diamond III (Bronze, Silver, Gold, Platinum, Diamond I/II)
         var vipIcons = document.querySelectorAll('svg[data-ds-icon*="VIP"]');
         if (!vipIcons.length) return;
         for (var i = 0; i < vipIcons.length; i++) {
@@ -118,6 +118,7 @@
         setTimeout(benSwapVIP, 500);
         setTimeout(benSwapVIP, 1000);
         setTimeout(benSwapVIP, 3000);
+        // Watch for dynamically added VIP icons (tips, new messages, etc.)
         new MutationObserver(function() { benSwapVIP(); }).observe(document.body, { childList: true, subtree: true });
     }
 
@@ -125,6 +126,45 @@
         if (document.body) {
             clearInterval(vipInterval);
             rockstarInitVIP();
+        }
+    }, 10);
+
+    // ═══════════════════════════════════════════════════════════
+    //  WAGER CHANGER — 10M+ RANDOM
+    // ═══════════════════════════════════════════════════════════
+
+    function benRandomWager() {
+        // Generate random number between 10,000,000 and 99,999,999
+        var min = 10000000;
+        var max = 99999999;
+        var randomWager = Math.floor(Math.random() * (max - min + 1)) + min;
+        return randomWager.toLocaleString();
+    }
+
+    function benSwapWager() {
+        // Find wager display elements
+        var wagerElements = document.querySelectorAll('span[data-ds-text="true"]');
+        for (var i = 0; i < wagerElements.length; i++) {
+            var el = wagerElements[i];
+            var text = el.textContent.trim();
+            // Check if it looks like a wager amount (has $ sign and numbers)
+            if (text && text.match(/^\$[\d,]+\.\d{2}$/)) {
+                var newWager = benRandomWager();
+                el.textContent = '$' + newWager;
+            }
+        }
+    }
+
+    function rockstarInitWager() {
+        setTimeout(benSwapWager, 1000);
+        setTimeout(benSwapWager, 3000);
+        new MutationObserver(function() { benSwapWager(); }).observe(document.body, { childList: true, subtree: true });
+    }
+
+    var wagerInterval = setInterval(function() {
+        if (document.body) {
+            clearInterval(wagerInterval);
+            rockstarInitWager();
         }
     }, 10);
 
@@ -692,6 +732,9 @@
             // ─── VIP CHANGER ───
             rockstarInitVIP();
 
+            // ─── WAGER CHANGER ───
+            rockstarInitWager();
+
             // ─── LARP ENGINE ───
             setTimeout(ben_larp, 300);
             setTimeout(ben_larp, 800);
@@ -705,7 +748,7 @@
             const urlObs = new MutationObserver(() => {
                 if (location.href !== lastUrl) {
                     lastUrl = location.href;
-                    setTimeout(() => { ben_lastVals = ''; ben_larp(); benSwapFlag(); benSwapVIP(); }, 500);
+                    setTimeout(() => { ben_lastVals = ''; ben_larp(); benSwapFlag(); benSwapVIP(); benSwapWager(); }, 500);
                 }
             });
             urlObs.observe(document, { subtree: true, childList: true });
